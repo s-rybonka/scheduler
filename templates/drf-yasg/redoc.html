@@ -1,0 +1,23 @@
+{% extends 'drf-yasg/redoc.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+  {% trans 'Scheduler Rest API' %}
+{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'libs/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/project.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/css/font-awesome.min.css' %}">
+{% endblock %}
+
+{% block extra_body %}
+    {% include 'includes/header.html' %}
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'libs/js/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/project.js' %}"></script>
+{% endblock %}

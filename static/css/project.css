@@ -1,0 +1,90 @@
+/* These styles are generated from project.scss. */
+
+.alert-debug {
+    color: black;
+    background-color: white;
+    border-color: #d6e9c6;
+}
+
+.alert-error {
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
+}
+
+@media (max-width: 47.9em) {
+    .navbar-nav .nav-item {
+        float: none;
+        width: 100%;
+        display: inline-block;
+    }
+
+    .navbar-nav .nav-item + .nav-item {
+        margin-left: 0;
+    }
+
+    .nav.navbar-nav.pull-right {
+        float: none !important;
+    }
+}
+
+/* Display django-debug-toolbar.
+   See https://github.com/django-debug-toolbar/django-debug-toolbar/issues/742
+   and https://github.com/pydanny/cookiecutter-django/issues/317
+*/
+[hidden][style="display: block;"] {
+    display: block !important;
+}
+
+.menu-content {
+    top: 56px !important;
+}
+
+.redoc-wrap {
+    padding-top: 56px;
+}
+
+.rest-auth-btn-block {
+    margin-top: 10px;
+}
+
+.auth-error {
+    margin-left: 3px;
+}
+
+.non-field-errors {
+    margin-bottom: 10px;
+}
+
+#token-auth-btn {
+    display: none;
+}
+
+#auth-token-reset-btn {
+    display: none;
+}
+
+.loader {
+    color: white;
+}
+
+.modal-title {
+    color: rgb(50, 50, 159);
+}
+
+.auth-user-data {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.kElosX p {
+    color: red !important;
+}
+
+.cxucko-0 {
+    margin-top: 50px;
+}
+
+.navbar {
+    padding-bottom: 15px;
+}
