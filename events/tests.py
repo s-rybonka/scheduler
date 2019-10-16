@@ -9,8 +9,11 @@ from events.models import Event
 
 class EventAPITestCase(DRF_APITestCase):
 
+	@classmethod
+	def setUpTestData(cls):
+		cls.end_list_url = reverse('api:events:event-list')
+
 	def test_create_event_success(self):
-		end_list_url = reverse('api:events:event-list')
 		payload = {
 			'title': faker.sentence(
 				nb_words=6,
@@ -24,23 +27,36 @@ class EventAPITestCase(DRF_APITestCase):
 			),
 			'start_date': '2019-12-12',
 			'end_date': '2019-12-12',
-			'start_time': '12:12',
-			'end_time': '14:12'
+			'start_time': '10:00',
+			'end_time': '12:00'
 		}
-		response = self.client.post(end_list_url, data=payload)
+		response = self.client.post(
+			self.end_list_url,
+			data=payload,
+		)
+		data = response.data
+
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		self.assertEqual(data['title'], payload['title'])
+		self.assertEqual(data['description'], payload['description'])
 
 	def test_get_event_list_success(self):
 		mixer.cycle(50).blend(Event)
-		end_list_url = reverse('api:events:event-list')
-		response = self.client.get(end_list_url)
+		response = self.client.get(
+			self.end_list_url
+		)
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(len(response.data), Event.objects.count())
 
 	def test_get_event_detail_success(self):
 		event = mixer.blend(Event)
-		end_detail_url = reverse('api:events:event-detail', args=(event.id,))
+		end_detail_url = reverse(
+			'api:events:event-detail',
+			args=(event.id,)
+		)
 		response = self.client.get(end_detail_url)
 		data = response.data
+
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(data['title'], event.title)
 		self.assertEqual(data['description'], event.description)
@@ -48,17 +64,33 @@ class EventAPITestCase(DRF_APITestCase):
 	def test_update_event_success(self):
 		event = mixer.blend(Event)
 		payload = {
-			'title': 'New Title',
+			'title': faker.sentence(
+				nb_words=3,
+				variable_nb_words=True,
+				ext_word_list=None,
+			),
 		}
-		end_detail_url = reverse('api:events:event-detail', args=(event.id,))
-		response = self.client.patch(end_detail_url, data=payload)
+		end_detail_url = reverse(
+			'api:events:event-detail',
+			args=(event.id,)
+		)
+		response = self.client.patch(
+			end_detail_url,
+			data=payload
+		)
 		data = response.data
+
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(data['title'], payload['title'])
 		self.assertEqual(data['description'], event.description)
 
 	def test_delete_event_success(self):
 		event = mixer.blend(Event)
-		end_detail_url = reverse('api:events:event-detail', args=(event.id,))
-		response = self.client.delete(end_detail_url)
+		end_detail_url = reverse(
+			'api:events:event-detail',
+			args=(event.id,)
+		)
+		response = self.client.delete(
+			end_detail_url
+		)
 		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
