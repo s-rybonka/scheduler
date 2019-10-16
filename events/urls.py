@@ -6,7 +6,7 @@ from events import views as events_views
 
 router = routers.SimpleRouter()
 
-router.register(r'events', events_views.EventModelViewSet, basename='events')
+router.register(r'events', events_views.EventModelViewSet, basename='event')
 
 app_name = 'events'
 
