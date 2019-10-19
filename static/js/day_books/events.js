@@ -9,16 +9,32 @@ $(document).ready(function () {
   var $errors = $('[class$="errors"]');
   var calendarEl = document.getElementById('calendar');
   var event_list_url = JSON.parse($('#event_list_id').text());
-  var DEFAULT_DATE_TIME_FORMAT = 'YYYY-MM-DD hh:mm';
+  var DEFAULT_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
   var context = {};
   
   var calendar = new FullCalendar.Calendar(calendarEl, {
-    plugins: ['dayGrid', 'interaction'],
+    plugins: ['dayGrid', 'interaction', 'bootstrap'],
+    themeSystem: 'bootstrap',
     selectable: true,
     selectHelper: true,
     editable: true,
     eventLimit: true,
-    height: 800,
+    height: 700,
+    eventColor: '#2f8deb',
+    eventTextColor: '#ffffff',
+    eventBorderColor: '#2f8deb',
+    eventTimeFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    },
+    buttonText: {
+      today: 'Today',
+      month: 'Month',
+      week: 'Week',
+      day: 'Day',
+      list: 'List'
+    },
     titleFormat: {
       year: 'numeric',
       month: 'long',
@@ -72,7 +88,16 @@ $(document).ready(function () {
     $.each(EVENT_FORM_ATTRS, function (key, value) {
       $(`.label-dyn-${key}`).html(value)
     });
-    if (action_type === 'update' && event) {
+    if (action_type === 'create' && !event) {
+      $event_form_component.attr('action', event_list_url);
+      $event_form_component[0].reset();
+      if (context.hasOwnProperty('slot_current_date')) {
+        $start_date_time.val(
+          moment(context.slot_current_date).format(DEFAULT_DATE_TIME_FORMAT)
+        );
+        delete context.slot_current_date;
+      }
+    } else if (action_type === 'update' && event) {
       var initial_values = getFormattedEventData(event);
       var event_id = initial_values.id;
       var event_abs_url = initial_values.abs_uri;
@@ -86,15 +111,6 @@ $(document).ready(function () {
       $.each(initial_values, function (key, value) {
         $(`#${key}_id`).val(value)
       });
-    } else if (action_type === 'create' && !event) {
-      $event_form_component.attr('action', event_list_url);
-      $event_form_component[0].reset();
-      if (context.hasOwnProperty('slot_current_date')) {
-        $start_date_time.val(
-          moment(context.slot_current_date).format(DEFAULT_DATE_TIME_FORMAT)
-        );
-        delete context.slot_current_date;
-      }
     }
     $errors.empty();
     setModalContextData(action_type);

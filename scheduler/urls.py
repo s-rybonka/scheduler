@@ -13,17 +13,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
-from django.urls import re_path
-from django.urls import include
 from django.shortcuts import redirect
+from django.urls import include
+from django.urls import path
+
 from scheduler import api_urls as core_api_urls
-from django.conf import settings
 
 urlpatterns = [
-    path('', lambda request: redirect('common:home_page')),
+    path('', lambda request: redirect('day_books:calendar')),
     path('day-books/', include('day_books.urls', namespace='common')),
     path('api/', include(core_api_urls, namespace='api')),
     path('admin/', admin.site.urls),

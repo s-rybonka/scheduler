@@ -6,16 +6,32 @@
   {{ block.super }}
   <link href='{% static 'libs/fullcalendar/core/main.min.css' %}' rel='stylesheet'/>
   <link href='{% static 'libs/fullcalendar/daygrid/main.min.css' %}' rel='stylesheet'/>
+  <link href='{% static 'libs/fullcalendar/bootstrap/main.min.css' %}' rel='stylesheet'/>
 {% endblock %}
 
 {% block content %}
-  <div id='calendar'></div>
+  {% include 'includes/nav_bar.html' %}
+  <div class="container main">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card border-primary mb-12">
+          <div class="card-body text-primary">
+            <h5 class="card-title text-dark">
+              {% trans "Let's schedule you next event!" %}
+            </h5>
+            <div id='calendar'></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% include 'includes/footer.html' %}
   {% url 'api:events:event-list' as event_list_url %}
   {{ event_list_url|json_script:'event_list_id' }}
 {% endblock %}
 
 {% block modal %}
- {% include 'day_books/modals/event_modal.html' %}
+  {% include 'day_books/modals/event_modal.html' %}
 {% endblock %}
 
 {% block javascript %}
@@ -23,5 +39,6 @@
   <script src='{% static 'libs/fullcalendar/core/main.min.js' %}'></script>
   <script src='{% static 'libs/fullcalendar/daygrid/main.min.js' %}'></script>
   <script src='{% static 'libs/fullcalendar/interaction/main.min.js' %}'></script>
+  <script src='{% static 'libs/fullcalendar/bootstrap/main.min.js' %}'></script>
   <script src="{% static 'js/day_books/events.js' %}"></script>
 {% endblock %}
