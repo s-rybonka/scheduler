@@ -1,3 +1,4 @@
+from dateutil import parser
 from django.urls import reverse
 from mixer.backend.django import faker
 from mixer.backend.django import mixer
@@ -25,9 +26,10 @@ class EventAPITestCase(DRF_APITestCase):
 				variable_nb_words=True,
 				ext_word_list=None,
 			),
-			'start_date_time': '2019-12-12 10:00',
-			'end_date_time': '2019-12-12 12:00',
+			'start_date_time': '2019-12-12 10:00:00',
+			'end_date_time': '2019-12-12 12:00:00',
 		}
+
 		response = self.client.post(
 			self.end_list_url,
 			data=payload,
@@ -35,8 +37,36 @@ class EventAPITestCase(DRF_APITestCase):
 		data = response.data
 
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-		self.assertEqual(data['title'], payload['title'])
-		self.assertEqual(data['description'], payload['description'])
+		self.assertEqual(payload['title'], data['title'])
+		self.assertEqual(
+			parser.parse(data['start_date_time'][:-6]),
+			parser.parse(payload['start_date_time'])
+		)
+		self.assertEqual(
+			parser.parse(data['end_date_time'][:-6]),
+			parser.parse(payload['end_date_time'])
+		)
+
+	def test_create_event_failure(self):
+		payload = {
+			'title': '',
+			'description': '',
+			'start_date_time': '2019/12/12 10:00:00',
+			'end_date_time': '2019/12/12 12:00:00',
+		}
+
+		response = self.client.post(
+			self.end_list_url,
+			data=payload,
+		)
+		data = response.data
+
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+		required_attrs = list(payload.keys())
+		invalid_attrs = list(data.keys())
+
+		self.assertEqual(required_attrs.sort(), invalid_attrs.sort())
 
 	def test_get_event_list_success(self):
 		mixer.cycle(50).blend(Event)
@@ -56,8 +86,16 @@ class EventAPITestCase(DRF_APITestCase):
 		data = response.data
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertEqual(data['title'], event.title)
-		self.assertEqual(data['description'], event.description)
+		self.assertEqual(event.title, data['title'])
+		self.assertEqual(event.description, data['description'])
+		self.assertEqual(
+			event.start_date_time,
+			parser.parse(data['start_date_time'])
+		)
+		self.assertEqual(
+			event.end_date_time,
+			parser.parse(data['end_date_time'])
+		)
 
 	def test_update_event_success(self):
 		event = mixer.blend(Event)
@@ -67,11 +105,20 @@ class EventAPITestCase(DRF_APITestCase):
 				variable_nb_words=True,
 				ext_word_list=None,
 			),
+			'description': faker.sentence(
+				nb_words=3,
+				variable_nb_words=True,
+				ext_word_list=None,
+			),
+			'start_date_time': '2019-10-21 9:00:00',
+			'end_date_time': '2019-10-22 11:00:00',
 		}
+
 		end_detail_url = reverse(
 			'api:events:event-detail',
 			args=(event.id,)
 		)
+
 		response = self.client.patch(
 			end_detail_url,
 			data=payload
@@ -79,8 +126,44 @@ class EventAPITestCase(DRF_APITestCase):
 		data = response.data
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertEqual(data['title'], payload['title'])
-		self.assertEqual(data['description'], event.description)
+		self.assertEqual(payload['title'], data['title'])
+		self.assertEqual(payload['description'], data['description'])
+		self.assertEqual(
+			parser.parse(payload['start_date_time']),
+			parser.parse(data['start_date_time'][:-6]),
+		)
+		self.assertEqual(
+			parser.parse(payload['end_date_time']),
+			parser.parse(data['end_date_time'][:-6]),
+		)
+
+	def test_update_event_failure(self):
+		event = mixer.blend(Event)
+		payload = {
+			'title': '',
+			'description': '',
+			'start_date_time': '2019-10-24 9:00:00',
+			'end_date_time': '2019-10-23 11:00:00',
+		}
+
+		end_detail_url = reverse(
+			'api:events:event-detail',
+			args=(event.id,)
+		)
+
+		response = self.client.patch(
+			end_detail_url,
+			data=payload
+		)
+		data = response.data
+
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+		required_attrs = list(payload.keys())
+		invalid_attrs = list(data.keys())
+
+		self.assertEqual(required_attrs.sort(), invalid_attrs.sort())
+
 
 	def test_delete_event_success(self):
 		event = mixer.blend(Event)
@@ -92,3 +175,16 @@ class EventAPITestCase(DRF_APITestCase):
 			end_detail_url
 		)
 		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+		self.assertFalse(response.data)
+
+	def test_delete_event_failure(self):
+		fake_event_id = 77
+		end_detail_url = reverse(
+			'api:events:event-detail',
+			args=(fake_event_id,)
+		)
+		response = self.client.delete(
+			end_detail_url
+		)
+		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+

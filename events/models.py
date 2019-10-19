@@ -14,10 +14,10 @@ class Event(TimeStampedModel):
 		verbose_name=_('description'),
 	)
 	start_date_time = models.DateTimeField(
-		verbose_name=_('start'),
+		verbose_name=_('start date time'),
 	)
 	end_date_time = models.DateTimeField(
-		verbose_name=_('end'),
+		verbose_name=_('end date time'),
 	)
 
 	class Meta:
@@ -29,7 +29,7 @@ class Event(TimeStampedModel):
 		return self.title
 
 	@property
-	def relative_uri(self):
+	def detail_uri(self):
 		return reverse(
 			'api:events:event-detail',
 			kwargs={

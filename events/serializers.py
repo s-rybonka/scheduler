@@ -11,20 +11,25 @@ class MessageSerializer(serializers.Serializer):
 
 class EventModelSerializer(serializers.ModelSerializer):
 	abs_uri = serializers.SerializerMethodField()
+
 	class Meta:
 		model = Event
 		fields = (
-			'id', 'title', 'description', 'start_date_time', 'end_date_time' ,'abs_uri',
+			'id', 'title', 'description', 'start_date_time', 'end_date_time', 'abs_uri',
 		)
 		extra_kwargs = {
 			'start_date_time': {
 				'error_messages': {
-					'invalid': _('Invalid datetime. Supported format: YYYY-MM-DD hh:mm')
+					'invalid': _(
+						'Invalid datetime. Supported format: YYYY-MM-DD HH:mm'
+					)
 				}
 			},
 			'end_date_time': {
 				'error_messages': {
-					'invalid': _('Invalid datetime. Supported format: YYYY-MM-DD hh:mm')
+					'invalid': _(
+						'Invalid datetime. Supported format: YYYY-MM-DD HH:mm'
+					)
 				}
 			}
 		}
@@ -50,7 +55,7 @@ class EventModelSerializer(serializers.ModelSerializer):
 		if 'request' in self.context:
 			request = self.context['request']
 			detail_uri = request.build_absolute_uri(
-				event.relative_uri
+				event.detail_uri
 			)
 		else:
 			detail_uri = ''
