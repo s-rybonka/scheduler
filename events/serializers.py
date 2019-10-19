@@ -1,3 +1,4 @@
+from django.utils import timezone as dj_timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
@@ -15,6 +16,35 @@ class EventModelSerializer(serializers.ModelSerializer):
 		fields = (
 			'id', 'title', 'description', 'start_date_time', 'end_date_time' ,'abs_uri',
 		)
+		extra_kwargs = {
+			'start_date_time': {
+				'error_messages': {
+					'invalid': _('Invalid datetime. Supported format: YYYY-MM-DD hh:mm')
+				}
+			},
+			'end_date_time': {
+				'error_messages': {
+					'invalid': _('Invalid datetime. Supported format: YYYY-MM-DD hh:mm')
+				}
+			}
+		}
+
+	def validate(self, attrs):
+		start_date_time = attrs.get('start_date_time')
+		end_date_time = attrs.get('end_date_time')
+		if start_date_time < dj_timezone.now():
+			raise serializers.ValidationError({
+				'start_date_time': _(
+					'Value must contains future date and/or time.'
+				)
+			})
+		elif start_date_time >= end_date_time:
+			raise serializers.ValidationError({
+				'start_date_time': _(
+					'Value must be less then event date and/or time.'
+				)
+			})
+		return attrs
 
 	def get_abs_uri(self, event):
 		if 'request' in self.context:
