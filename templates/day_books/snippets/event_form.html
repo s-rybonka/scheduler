@@ -1,0 +1,45 @@
+{% load i18n %}
+<form id="event-form-component">
+  <div class="form-group">
+    <label for="title">
+      <span class="label-dyn-title"></span>
+    </label>
+    <input type="text" name="title" id="title_id" class="form-control">
+    <span class="text-danger title-error"></span>
+  </div>
+  <div class="form-group">
+    <label for="description">
+      <span class="label-dyn-description"></span>
+    </label>
+    <textarea name="description" id="description_id" class="form-control" rows="5"></textarea>
+    <span class="text-danger description-error"></span>
+  </div>
+  <div class="form-group">
+    <label for="start_date_time_id">
+      <span class="label-dyn-start_date_time"></span>
+    </label>
+    <div class="input-group">
+      <input type="text" name="start_date_time" id="start_date_time_id" class="form-control picker" aria-describedby="start-date-time">
+      <div class="input-group-append">
+        <span id="start-date-time" class="input-group-text">
+          <i class="fa fa-calendar"></i>
+        </span>
+      </div>
+    </div>
+    <span class="text-danger start_date_time-error"></span>
+  </div>
+  <div class="form-group">
+    <label for="end_date_time_id">
+      <span class="label-dyn-end_date_time"></span>
+    </label>
+    <div class="input-group">
+      <input type="text" name="end_date_time" id="end_date_time_id" class="form-control picker" aria-describedby="end-date-time">
+      <div class="input-group-append">
+        <span id="end-date-time" class="input-group-text">
+          <i class="fa fa-calendar"></i>
+        </span>
+      </div>
+    </div>
+    <span class="text-danger end_date_time-error"></span>
+  </div>
+</form>

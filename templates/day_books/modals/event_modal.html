@@ -1,0 +1,18 @@
+{% load i18n %}
+<div class="modal" id="event-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span class="heading"></span>
+        </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;
+        </button>
+      </div>
+      <div class="modal-body">
+        {% include 'day_books/snippets/event_form.html' %}
+      </div>
+      <div class="modal-footer action-buttons"></div>
+    </div>
+  </div>
+</div>

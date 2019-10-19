@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
+from rest_framework.reverse import reverse
 
 
 class Event(TimeStampedModel):
@@ -12,17 +13,11 @@ class Event(TimeStampedModel):
 		max_length=500,
 		verbose_name=_('description'),
 	)
-	start_date = models.DateField(
-		verbose_name=_('start date'),
+	start_date_time = models.DateTimeField(
+		verbose_name=_('start'),
 	)
-	end_date = models.DateField(
-		verbose_name=_('end date'),
-	)
-	start_time = models.TimeField(
-		verbose_name=_('start time'),
-	)
-	end_time = models.TimeField(
-		verbose_name=_('end time'),
+	end_date_time = models.DateTimeField(
+		verbose_name=_('end'),
 	)
 
 	class Meta:
@@ -32,3 +27,12 @@ class Event(TimeStampedModel):
 
 	def __str__(self):
 		return self.title
+
+	@property
+	def relative_uri(self):
+		return reverse(
+			'api:events:event-detail',
+			kwargs={
+				'pk': self.pk
+			}
+		)

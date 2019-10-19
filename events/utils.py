@@ -1,6 +1,6 @@
 from drf_yasg import openapi
 
-from common.serializers import MessageSerializer
+from events.serializers import MessageSerializer
 
 
 def get_default_schema_responses(success_response):

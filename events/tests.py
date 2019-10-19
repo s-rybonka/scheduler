@@ -16,7 +16,7 @@ class EventAPITestCase(DRF_APITestCase):
 	def test_create_event_success(self):
 		payload = {
 			'title': faker.sentence(
-				nb_words=6,
+				nb_words=4,
 				variable_nb_words=True,
 				ext_word_list=None,
 			),
@@ -25,10 +25,8 @@ class EventAPITestCase(DRF_APITestCase):
 				variable_nb_words=True,
 				ext_word_list=None,
 			),
-			'start_date': '2019-12-12',
-			'end_date': '2019-12-12',
-			'start_time': '10:00',
-			'end_time': '12:00'
+			'start_date_time': '2019-12-12 10:00',
+			'end_date_time': '2019-12-12 12:00',
 		}
 		response = self.client.post(
 			self.end_list_url,

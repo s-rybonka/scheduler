@@ -3,7 +3,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.viewsets import ModelViewSet
 
-from common.utils import get_default_schema_responses
+from events.utils import get_default_schema_responses
 from events import models as events_models
 from events import serializers as events_serializers
 

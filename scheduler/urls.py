@@ -23,8 +23,9 @@ from scheduler import api_urls as core_api_urls
 from django.conf import settings
 
 urlpatterns = [
-    re_path('^$', lambda request: redirect('api:docs')),
-    re_path('^api/', include(core_api_urls, namespace='api')),
+    path('', lambda request: redirect('common:home_page')),
+    path('day-books/', include('day_books.urls', namespace='common')),
+    path('api/', include(core_api_urls, namespace='api')),
     path('admin/', admin.site.urls),
 ]
 

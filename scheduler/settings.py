@@ -20,11 +20,12 @@ env = environ.Env(
 	DJANGO_SECRET_KEY=(str, 'CHANGEME!!!$eb_5&aw%k#wo@(z12wwq7)u*8^7!vta6'),
 	DJANGO_ALLOWED_HOSTS=(list, ['*']),
 	DJANGO_STATIC_ROOT=(str, 'staticfiles'),
-	API_DOC_SCHEMA_TITLE=(str, ''),
-	API_DOC_SCHEMA_DESCRIPTION=(str, ''),
-	API_DOC_SCHEMA_AUTHOR_EMAIL=(str, ''),
-	API_DOC_SCHEMA_AGREEMENT_URL=(str, ''),
-	API_DOC_SCHEMA_LICENCE=(str, ''),
+	DJANGO_TIMEZONE=(str, 'Europe/Kiev'),
+	API_DOC_SCHEMA_TITLE=(str, 'Scheduler REST API'),
+	API_DOC_SCHEMA_DESCRIPTION=(str, 'Built with Django Rest Framework'),
+	API_DOC_SCHEMA_AUTHOR_EMAIL=(str, 'stanislav.rybonka@gmail.com'),
+	API_DOC_SCHEMA_AGREEMENT_URL=(str, 'www.agreement.com'),
+	API_DOC_SCHEMA_LICENCE=(str, 'www.no-licence.com'),
 )
 
 environ.Env.read_env()
@@ -110,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = env('DJANGO_TIMEZONE')
 
 USE_I18N = True
 
