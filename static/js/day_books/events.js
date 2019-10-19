@@ -5,9 +5,11 @@ $(document).ready(function () {
   var $modal_action_buttons = $('.action-buttons');
   var $modal_heading = $('.heading');
   var $event_form_component = $("#event-form-component");
+  var $errors = $('[class$="errors"]');
   var calendarEl = document.getElementById('calendar');
   var event_list_url = JSON.parse($('#event_list_id').text());
   var DEFAULT_DATE_TIME_FORMAT = 'YYYY-MM-DD hh:mm';
+  var context = {};
   
   var calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: ['dayGrid', 'interaction'],
@@ -51,6 +53,10 @@ $(document).ready(function () {
     eventClick: function (data) {
       initEventFrom('update', data.event);
     },
+    eventDrop: function (data) {
+      initEventFrom('update', data.event);
+      context.event_drop_info = data;
+    },
   });
   
   function initEventFrom(action_type, event) {
@@ -83,6 +89,7 @@ $(document).ready(function () {
       $event_form_component.attr('action', event_list_url);
       $event_form_component[0].reset()
     }
+    $errors.empty();
     setModalContextData(action_type);
   }
   
@@ -177,11 +184,15 @@ $(document).ready(function () {
   function eventActionErrorHandler(data) {
     var errors = data.responseJSON;
     $.map(errors, function (value, key) {
-      $(`.${key}-error`).html(value)
+      $(`.${key}-errors`).html(value)
     });
   }
   
-  function bindEventHandlers() {
+  function cleanUpFormInputErrors() {
+    $(`.${this.name}-errors`).empty()
+  }
+  
+  function bindCalendarEventHandlers() {
     $document.on(
       'click', '.create-btn',
       {
@@ -214,9 +225,22 @@ $(document).ready(function () {
       },
       makeApiCall,
     );
+    
+    $document.on('click', '.close-btn', function () {
+      if(context.hasOwnProperty('event_drop_info')){
+        context.event_drop_info.revert();
+        delete context.event_drop_info;
+      }
+    });
+    
+    $document.on(
+      "change paste keyup",
+      getFormInputIds('event-form-component').toString(),
+      cleanUpFormInputErrors
+    );
   }
   
   calendar.render();
-  bindEventHandlers();
+  bindCalendarEventHandlers();
   
 });
