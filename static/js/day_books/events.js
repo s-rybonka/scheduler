@@ -5,6 +5,7 @@ $(document).ready(function () {
   var $modal_action_buttons = $('.action-buttons');
   var $modal_heading = $('.heading');
   var $event_form_component = $("#event-form-component");
+  var $start_date_time = $("#start_date_time_id");
   var $errors = $('[class$="errors"]');
   var calendarEl = document.getElementById('calendar');
   var event_list_url = JSON.parse($('#event_list_id').text());
@@ -48,7 +49,8 @@ $(document).ready(function () {
       });
     },
     dateClick: function (info) {
-      initEventFrom('create')
+      context.slot_current_date = info.date;
+      initEventFrom('create');
     },
     eventClick: function (data) {
       initEventFrom('update', data.event);
@@ -70,7 +72,6 @@ $(document).ready(function () {
     $.each(EVENT_FORM_ATTRS, function (key, value) {
       $(`.label-dyn-${key}`).html(value)
     });
-    
     if (action_type === 'update' && event) {
       var initial_values = getFormattedEventData(event);
       var event_id = initial_values.id;
@@ -87,7 +88,13 @@ $(document).ready(function () {
       });
     } else if (action_type === 'create' && !event) {
       $event_form_component.attr('action', event_list_url);
-      $event_form_component[0].reset()
+      $event_form_component[0].reset();
+      if (context.hasOwnProperty('slot_current_date')) {
+        $start_date_time.val(
+          moment(context.slot_current_date).format(DEFAULT_DATE_TIME_FORMAT)
+        );
+        delete context.slot_current_date;
+      }
     }
     $errors.empty();
     setModalContextData(action_type);
@@ -227,7 +234,7 @@ $(document).ready(function () {
     );
     
     $document.on('click', '.close-btn', function () {
-      if(context.hasOwnProperty('event_drop_info')){
+      if (context.hasOwnProperty('event_drop_info')) {
         context.event_drop_info.revert();
         delete context.event_drop_info;
       }
