@@ -7,6 +7,8 @@ $(document).ready(function () {
   var $event_form_component = $("#event-form-component");
   var $start_date_time = $("#start_date_time_id");
   var $errors = $('[class$="errors"]');
+  var $start_date_time_picker = $('#start_date_time_picker');
+  var $end_date_time_picker = $('#end_date_time_picker');
   var calendarEl = document.getElementById('calendar');
   var event_list_url = JSON.parse($('#event_list_id').text());
   var DEFAULT_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
@@ -261,6 +263,9 @@ $(document).ready(function () {
       getFormInputIds('event-form-component').toString(),
       cleanUpFormInputErrors
     );
+    
+    $start_date_time_picker.datetimepicker();
+    $end_date_time_picker.datetimepicker();
   }
   
   calendar.render();

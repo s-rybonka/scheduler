@@ -18,9 +18,11 @@
     <label for="start_date_time_id">
       <span class="label-dyn-start_date_time"></span>
     </label>
-    <div class="input-group">
-      <input type="text" name="start_date_time" id="start_date_time_id" class="form-control picker" aria-describedby="start-date-time">
-      <div class="input-group-append">
+    <div class="input-group date" id="start_date_time_picker" data-target-input="nearest">
+      <input type="text" name="start_date_time" id="start_date_time_id" class="form-control datetimepicker-input"
+             aria-describedby="start-date-time" data-target="#start_date_time_picker"
+      >
+      <div class="input-group-append" data-target="#start_date_time_picker" data-toggle="datetimepicker">
         <span id="start-date-time" class="input-group-text">
           <i class="fa fa-calendar"></i>
         </span>
@@ -32,9 +34,11 @@
     <label for="end_date_time_id">
       <span class="label-dyn-end_date_time"></span>
     </label>
-    <div class="input-group">
-      <input type="text" name="end_date_time" id="end_date_time_id" class="form-control picker" aria-describedby="end-date-time">
-      <div class="input-group-append">
+    <div class="input-group date" id="end_date_time_picker" data-target-input="nearest">
+      <input type="text" name="end_date_time" id="end_date_time_id" class="form-control datetimepicker-input"
+             aria-describedby="end-date-time" data-target="#end_date_time_picker"
+      >
+      <div class="input-group-append" data-target="#end_date_time_picker" data-toggle="datetimepicker">
         <span id="end-date-time" class="input-group-text">
           <i class="fa fa-calendar"></i>
         </span>

@@ -12,7 +12,7 @@ schema_view = get_schema_view(
 		terms_of_service=settings.API_DOC_SCHEMA_AGREEMENT_URL,
 		license=openapi.License(name=settings.API_DOC_SCHEMA_LICENCE),
 	),
-	url='',
+	url='http://127.0.0.1:8000/',
 	public=True,
 )
 
