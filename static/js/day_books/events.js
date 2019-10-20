@@ -44,6 +44,7 @@ $(document).ready(function () {
     events: function (info, successCallback, failureCallback) {
       $.ajax({
         type: 'GET',
+        dataType: 'json',
         url: event_list_url,
         success: function (response) {
           successCallback(response.map(function (event) {
@@ -52,10 +53,8 @@ $(document).ready(function () {
                 title: event.title,
                 start: event.start_date_time,
                 end: event.end_date_time,
-                extendedProps: {
-                  description: event.description,
-                  absolute_uri: event.abs_uri,
-                },
+                description: event.description,
+                absolute_uri: event.abs_uri,
               }
             })
           );
@@ -73,8 +72,8 @@ $(document).ready(function () {
       initEventFrom('update', data.event);
     },
     eventDrop: function (data) {
+      writeToContext('event_drop_info', data);
       initEventFrom('update', data.event);
-      writeToContext('event_drop_info', data)
     },
   });
   
@@ -184,10 +183,12 @@ $(document).ready(function () {
   
   function createEventHandler(data) {
     calendar.addEvent({
+      id: data.id,
       title: data.title,
       description: data.description,
       start: data.start_date_time,
       end: data.end_date_time,
+      absolute_uri: data.abs_uri,
     });
     $event_modal.modal('hide');
   }

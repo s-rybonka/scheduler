@@ -53,20 +53,6 @@ from events import serializers as events_serializers
 class EventModelViewSet(ModelViewSet):
 	serializer_class = events_serializers.EventModelSerializer
 	http_method_names = ['get', 'post', 'patch', 'delete']
-	def create(self, request, *args, **kwargs):
-		print(request.data)
-		print('post')
-		return super().create(request, *args, **kwargs)
-
-	def destroy(self, request, *args, **kwargs):
-		print(request.data)
-		print('delete')
-		return super().destroy(self, request, *args, **kwargs)
-
-	def update(self, request, *args, **kwargs):
-		print(request.data)
-		print('patch')
-		return super().update(request, *args, **kwargs)
 
 	def get_queryset(self):
 		return events_models.Event.objects.all()
