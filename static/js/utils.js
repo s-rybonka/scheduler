@@ -74,24 +74,26 @@ function processDataForMethod($form, method, instance) {
       return formatted_form_data
     },
     PATCH: function () {
-      var old_start_date_time = moment(instance['start']).format(
-        DEFAULT_DATE_TIME_FORMAT
-      );
-      var old_end_date_time = moment(instance['end']).format(
-        DEFAULT_DATE_TIME_FORMAT
-      );
-      
-      $.each(formatted_form_data, function (key, value) {
-        if (instance[key] === value) {
-          delete formatted_form_data[key]
-        } else if (old_start_date_time === value) {
-          delete formatted_form_data[key]
-        } else if (old_end_date_time === value) {
-          delete formatted_form_data[key]
-        } else if (instance['extendedProps'][key] === value) {
-          delete formatted_form_data[key]
-        }
-      });
+      if (instance) {
+        var old_start_date_time = moment(instance['start']).format(
+          DEFAULT_DATE_TIME_FORMAT
+        );
+        var old_end_date_time = moment(instance['end']).format(
+          DEFAULT_DATE_TIME_FORMAT
+        );
+        
+        $.each(formatted_form_data, function (key, value) {
+          if (instance[key] === value) {
+            delete formatted_form_data[key]
+          } else if (old_start_date_time === value && !instance.has_drop_event) {
+            delete formatted_form_data[key]
+          } else if (old_end_date_time === value && !instance.has_drop_event) {
+            delete formatted_form_data[key]
+          } else if (instance['extendedProps'][key] === value) {
+            delete formatted_form_data[key]
+          }
+        });
+      }
       return formatted_form_data
     },
     DELETE: function () {

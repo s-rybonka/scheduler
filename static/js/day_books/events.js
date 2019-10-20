@@ -73,6 +73,7 @@ $(document).ready(function () {
     },
     eventDrop: function (data) {
       writeToContext('event_drop_info', data);
+      writeToContext('drop_triggered', true);
       initEventFrom('update', data.event);
     },
   });
@@ -162,6 +163,9 @@ $(document).ready(function () {
     var instance = calendar.getEventById(
       data.form.attr('data-instance-id')
     );
+    instance.has_drop_event = getContextData(
+      'drop_triggered'
+    );
     $.ajax({
       type: data.method,
       url: data.form.attr('action'),
@@ -173,6 +177,7 @@ $(document).ready(function () {
         instance,
       ),
       success: function (response) {
+        deleteFromContext('drop_triggered');
         data.successHandler(response)
       },
       error: function (response) {
