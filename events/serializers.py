@@ -37,16 +37,16 @@ class EventModelSerializer(serializers.ModelSerializer):
 	def validate(self, attrs):
 		start_date_time = attrs.get('start_date_time')
 		end_date_time = attrs.get('end_date_time')
-		if start_date_time < dj_timezone.now():
+		if start_date_time and start_date_time < dj_timezone.now():
 			raise serializers.ValidationError({
 				'start_date_time': _(
 					'Value must contains future date and/or time.'
 				)
 			})
-		elif start_date_time >= end_date_time:
+		elif start_date_time and end_date_time and start_date_time >= end_date_time:
 			raise serializers.ValidationError({
 				'start_date_time': _(
-					'Value must be less then event date and/or time.'
+					'Value must be less then event end date and/or time.'
 				)
 			})
 		return attrs

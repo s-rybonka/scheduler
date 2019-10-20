@@ -1,3 +1,5 @@
+var DEFAULT_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
+
 function setCookie(key, value, expiry) {
   var expires = new Date();
   expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
@@ -38,7 +40,7 @@ $.ajaxSetup({
   }
 });
 
-function getFormData($form) {
+function getFormattedFormData($form) {
   var unindexed_array = $form.serializeArray();
   var indexed_array = {};
   $.map(unindexed_array, function (n, i) {
@@ -61,4 +63,40 @@ function getFormInputIds(form_name) {
     form_input_ids.push(`#${this.id}`)
   });
   return form_input_ids
+}
+
+function processDataForMethod($form, method, instance) {
+  var formatted_form_data = getFormattedFormData(
+    $form
+  );
+  handlers = {
+    POST: function () {
+      return formatted_form_data
+    },
+    PATCH: function () {
+      var old_start_date_time = moment(instance['start']).format(
+        DEFAULT_DATE_TIME_FORMAT
+      );
+      var old_end_date_time = moment(instance['end']).format(
+        DEFAULT_DATE_TIME_FORMAT
+      );
+      
+      $.each(formatted_form_data, function (key, value) {
+        if (instance[key] === value) {
+          delete formatted_form_data[key]
+        } else if (old_start_date_time === value) {
+          delete formatted_form_data[key]
+        } else if (old_end_date_time === value) {
+          delete formatted_form_data[key]
+        } else if (instance['extendedProps'][key] === value) {
+          delete formatted_form_data[key]
+        }
+      });
+      return formatted_form_data
+    },
+    DELETE: function () {
+      return {}
+    }
+  };
+  return JSON.stringify(handlers[method]())
 }

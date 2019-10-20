@@ -11,7 +11,6 @@ $(document).ready(function () {
   var $end_date_time_picker = $('#end_date_time_picker');
   var calendarEl = document.getElementById('calendar');
   var event_list_url = JSON.parse($('#event_list_id').text());
-  var DEFAULT_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
   var context = {};
   
   var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -67,7 +66,7 @@ $(document).ready(function () {
       });
     },
     dateClick: function (info) {
-      context.slot_current_date = info.date;
+      writeToContext('slot_current_date', info.date);
       initEventFrom('create');
     },
     eventClick: function (data) {
@@ -75,7 +74,7 @@ $(document).ready(function () {
     },
     eventDrop: function (data) {
       initEventFrom('update', data.event);
-      context.event_drop_info = data;
+      writeToContext('event_drop_info', data)
     },
   });
   
@@ -93,12 +92,11 @@ $(document).ready(function () {
     if (action_type === 'create' && !event) {
       $event_form_component.attr('action', event_list_url);
       $event_form_component[0].reset();
-      if (context.hasOwnProperty('slot_current_date')) {
-        $start_date_time.val(
-          moment(context.slot_current_date).format(DEFAULT_DATE_TIME_FORMAT)
-        );
-        delete context.slot_current_date;
-      }
+      $start_date_time.val(
+        moment(getContextData('slot_current_date')).format(DEFAULT_DATE_TIME_FORMAT)
+      );
+      deleteFromContext('slot_current_date')
+      
     } else if (action_type === 'update' && event) {
       var initial_values = getFormattedEventData(event);
       var event_id = initial_values.id;
@@ -108,7 +106,7 @@ $(document).ready(function () {
       delete initial_values.abs_uri;
       
       $event_form_component.attr('action', event_abs_url);
-      $event_form_component.attr('data-event-id', event_id);
+      $event_form_component.attr('data-instance-id', event_id);
       
       $.each(initial_values, function (key, value) {
         $(`#${key}_id`).val(value)
@@ -162,13 +160,18 @@ $(document).ready(function () {
   
   function makeApiCall(jq_event) {
     var data = jq_event.data;
+    var instance = calendar.getEventById(
+      data.form.attr('data-instance-id')
+    );
     $.ajax({
       type: data.method,
       url: data.form.attr('action'),
       contentType: "application/json; charset=utf-8",
       dataType: "json",
-      data: JSON.stringify(
-        getFormData(data.form)
+      data: processDataForMethod(
+        data.form,
+        data.method,
+        instance,
       ),
       success: function (response) {
         data.successHandler(response)
@@ -201,7 +204,7 @@ $(document).ready(function () {
   }
   
   function deleteEventHandler(data) {
-    var event = calendar.getEventById($event_form_component.attr('data-event-id'));
+    var event = calendar.getEventById($event_form_component.attr('data-instance-id'));
     event.remove();
     $event_modal.modal('hide');
   }
@@ -252,10 +255,11 @@ $(document).ready(function () {
     );
     
     $document.on('click', '.close-btn', function () {
-      if (context.hasOwnProperty('event_drop_info')) {
-        context.event_drop_info.revert();
-        delete context.event_drop_info;
+      var event_drop_info = getContextData('event_drop_info');
+      if (event_drop_info) {
+        event_drop_info.revert();
       }
+      deleteFromContext('event_drop_info');
     });
     
     $document.on(
@@ -264,8 +268,28 @@ $(document).ready(function () {
       cleanUpFormInputErrors
     );
     
-    $start_date_time_picker.datetimepicker();
-    $end_date_time_picker.datetimepicker();
+    $start_date_time_picker.datetimepicker({
+      format: DEFAULT_DATE_TIME_FORMAT,
+    });
+    $end_date_time_picker.datetimepicker({
+      format: DEFAULT_DATE_TIME_FORMAT
+    });
+  }
+  
+  function writeToContext(key, value) {
+    context[key] = value
+  }
+  
+  function getContextData(key) {
+    if (context.hasOwnProperty(key)) {
+      return context[key]
+    }
+  }
+  
+  function deleteFromContext(key) {
+    if (context.hasOwnProperty(key)) {
+      delete context[key];
+    }
   }
   
   calendar.render();

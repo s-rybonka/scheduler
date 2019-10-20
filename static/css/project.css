@@ -93,3 +93,12 @@
     margin-top: 15px;
     margin-bottom: 20px;
 }
+label{
+    font-weight: bold;
+}
+.text-underline{
+    text-decoration: underline;
+}
+.overlay{
+    z-index: -1000;
+}
