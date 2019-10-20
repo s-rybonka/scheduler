@@ -1,6 +1,9 @@
+{% load i18n %}
 <footer id="sticky-footer" class="py-4 bg-light text-white-50 border-top border-primary">
   <div class="container text-center text-dark">
-    <small>Copyright &copy; Scheduler</small>
+    {% blocktrans %}
+      <small>Copyright &copy; Scheduler</small>
+    {% endblocktrans %}
     <p>{% now "Y" %}</p>
   </div>
 </footer>
