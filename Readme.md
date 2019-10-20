@@ -14,4 +14,4 @@
 7. Configure your interpreter in IDE (optional)
 8. Run application: ./manage.py runserver 127.0.0.1:8000
 
-Note: Please, exclude optional settings from .env file, if you are not going to override them.
+**Note**: Please, exclude optional settings from .env file, if you are not going to override them.
