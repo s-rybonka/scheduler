@@ -163,9 +163,11 @@ $(document).ready(function () {
     var instance = calendar.getEventById(
       data.form.attr('data-instance-id')
     );
-    instance.has_drop_event = getContextData(
-      'drop_triggered'
-    );
+    if (instance) {
+      instance.has_drop_event = getContextData(
+        'drop_triggered'
+      );
+    }
     $.ajax({
       type: data.method,
       url: data.form.attr('action'),
@@ -177,8 +179,7 @@ $(document).ready(function () {
         instance,
       ),
       success: function (response) {
-        deleteFromContext('drop_triggered');
-        data.successHandler(response)
+        data.successHandler(response);
       },
       error: function (response) {
         data.errorHandler(response)
@@ -207,12 +208,14 @@ $(document).ready(function () {
       data.end_date_time
     );
     $event_modal.modal('hide');
+    writeToContext('drop_triggered', false);
   }
   
   function deleteEventHandler(data) {
     var event = calendar.getEventById($event_form_component.attr('data-instance-id'));
     event.remove();
     $event_modal.modal('hide');
+    writeToContext('drop_triggered', false);
   }
   
   function eventActionErrorHandler(data) {
@@ -266,6 +269,7 @@ $(document).ready(function () {
         event_drop_info.revert();
       }
       deleteFromContext('event_drop_info');
+      writeToContext('drop_triggered', false);
     });
     
     $document.on(
