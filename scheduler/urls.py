@@ -24,7 +24,7 @@ from scheduler import api_urls as core_api_urls
 
 urlpatterns = [
     path('', lambda request: redirect('day_books:calendar')),
-    path('day-books/', include('day_books.urls', namespace='common')),
+    path('day-books/', include('day_books.urls', namespace='day_books')),
     path('api/', include(core_api_urls, namespace='api')),
     path('admin/', admin.site.urls),
 ]
